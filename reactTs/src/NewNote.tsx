@@ -1,4 +1,3 @@
-import { Card } from "react-bootstrap";
 import { NoteData, Tag } from "./App";
 import { NoteForm } from "./NoteForm";
 
@@ -11,18 +10,15 @@ type NewNoteProps = {
 export function NewNote({ onSubmit, onAddTag, availableTags }: NewNoteProps) {
   return (
     <>
-      <Card>
-        <Card.Header>
-          <h5>New Note</h5>
-        </Card.Header>
-        <Card.Body>
-          <NoteForm
-            onSubmit={onSubmit}
-            onAddTag={onAddTag}
-            availableTags={availableTags}
-          ></NoteForm>
-        </Card.Body>
-      </Card>
+      <h1 className="mb-4" style={{ fontSize: "1.4rem", fontWeight: 700 }}>
+        New Note
+      </h1>
+      <NoteForm
+        onSubmit={onSubmit}
+        onAddTag={onAddTag}
+        availableTags={availableTags}
+        enableBeautify
+      />
     </>
   );
 }

@@ -5,15 +5,20 @@ type NoteLayoutProps = {
   notes: Note[];
 };
 
+type NoteContext = {
+  note: Note;
+  allNotes: Note[];
+};
+
 export function NoteLayout({ notes }: NoteLayoutProps) {
-  const {id} = useParams()
-  const note = notes.find(note => note.id == id)
+  const { id } = useParams();
+  const note = notes.find((n) => n.id === id);
 
-  if (note == null) return <Navigate to='/' replace />
+  if (note == null) return <Navigate to="/" replace />;
 
-    return <Outlet context={note}/>;
+  return <Outlet context={{ note, allNotes: notes } satisfies NoteContext} />;
 }
 
-export function useNote() {
-    return useOutletContext<Note>()
+export function useNote(): NoteContext {
+  return useOutletContext<NoteContext>();
 }

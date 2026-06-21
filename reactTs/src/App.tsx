@@ -1,4 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "react-bootstrap";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { NewNote } from "./NewNote";
@@ -13,6 +12,7 @@ import { staticData, staticTags } from "./StaticData";
 
 export type RawNote = {
   id: string;
+  isFavorite?: boolean;
 } & RawNoteData;
 
 export type RawNoteData = {
@@ -23,6 +23,7 @@ export type RawNoteData = {
 
 export type Note = {
   id: string;
+  isFavorite?: boolean;
 } & NoteData;
 
 export type NoteData = {
@@ -61,7 +62,7 @@ function App() {
   function onEditNote(id: string, { tags, ...data }: NoteData) {
     setNotes((prevNotes) => {
       return prevNotes.map((note) => {
-        if (note.id == id) {
+        if (note.id === id) {
           return { ...note, ...data, tagIds: tags.map((tag) => tag.id) };
         } else {
           return note;
@@ -76,6 +77,14 @@ function App() {
     });
   }
 
+  function onToggleFavorite(id: string) {
+    setNotes((prevNotes) =>
+      prevNotes.map((note) =>
+        note.id === id ? { ...note, isFavorite: !note.isFavorite } : note
+      )
+    );
+  }
+
   function addTag(tag: Tag) {
     setTags((prevTags) => [...prevTags, tag]);
   }
@@ -83,7 +92,7 @@ function App() {
   function onUpdateTag(id: string, label: string) {
     setTags((prevTags) => {
       return prevTags.map((tag) => {
-        if (tag.id == id) {
+        if (tag.id === id) {
           return { ...tag, label };
         } else {
           return tag;
@@ -120,6 +129,7 @@ function App() {
               onUpdateTag={onUpdateTag}
               onDeleteTag={onDeleteTag}
               onAddTagFromModal={onAddTagFromModal}
+              onToggleFavorite={onToggleFavorite}
             />
           }
         ></Route>
@@ -134,7 +144,7 @@ function App() {
           }
         ></Route>
         <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
-          <Route index element={<Note onDelete={onDeleteNote} />}></Route>
+          <Route index element={<Note onDelete={onDeleteNote} onToggleFavorite={onToggleFavorite} onEdit={onEditNote} />}></Route>
           <Route
             path="edit"
             element={

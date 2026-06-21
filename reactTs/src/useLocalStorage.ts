@@ -10,7 +10,13 @@ export function useLocalStorage<T>(key: string, initialValue: T | (() => T)) {
         return initialValue;
       }
     } else {
-      return JSON.parse(jsonValue as string);
+      try {
+        return JSON.parse(jsonValue as string);
+      } catch {
+        return typeof initialValue === "function"
+          ? (initialValue as () => T)()
+          : initialValue;
+      }
     }
   });
 
